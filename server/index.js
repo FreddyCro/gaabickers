@@ -2,17 +2,13 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+const chatServiceStart = require('./utils/chat-service');
 
-io.on('connection', socket => {
-  console.log('connection');
-  setInterval(() => socket.emit('message', 'broacast!'), 1000);
-});
+chatServiceStart(io);
 
-// Set static folder
 app.use(express.static(path.join(__dirname, '../public/')));
 
 const PORT = process.env.PORT || 3000;
