@@ -1,22 +1,34 @@
 module.exports = function chatServiceStart(io) {
   io.on('connection', socket => {
-    console.log('a user is connection');
-    socket.emit('message', 'you are connection');
+    socket.emit('connection');
+    // update users number
 
     // handle join
-    socket.on('joinRoom', userName =>
-      socket.broadcast.emit('message', userName)
-    );
+    socket.on('joinRoom', userName => {
+      const msg = {
+        name: userName,
+        text: `${userName} is joined.`,
+        time: new Date()
+      };
+      socket.broadcast.emit('message', msg);
+
+      // update users number of room
+    });
 
     // handle chat message
     socket.on('chatMessage', msg => {
-      socket.broadcast.emit('message', `${msg.userName}: ${msg.text}`);
-      socket.emit('message', `yourself: ${msg.text}`);
+      socket.broadcast.emit('message', `${msg.name}: ${msg.text}`);
+      socket.emit('message', msg);
     });
 
     // handle disconnect
-    socket.on('disconnect', userName =>
-      socket.broadcast.emit('message', `${userName} is disconnected.`)
-    );
+    socket.on('disconnect', userName => {
+      const msg = {
+        name: userName,
+        text: `${userName} is disconnected.`,
+        time: new Date()
+      };
+      socket.broadcast.emit('message', msg);
+    });
   });
 };
