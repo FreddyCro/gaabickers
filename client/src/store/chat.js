@@ -13,7 +13,7 @@ export default {
     addMessage(state, msg) {
       state.messages.push({
         name: msg.name || 'anonymity',
-        msg: msg.text,
+        text: msg.text,
         time: msg.time
       });
     }

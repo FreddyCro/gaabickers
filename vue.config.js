@@ -13,7 +13,7 @@ module.exports = {
   },
   publicPath: './',
   outputDir: './public/gaabickers',
-  productionSourceMap: false,
+  productionSourceMap: process.env === 'production' ? false : true,
   devServer: {
     proxy: 'http://localhost:3000'
   },

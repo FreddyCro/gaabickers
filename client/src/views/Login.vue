@@ -1,5 +1,17 @@
-<template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+<template lang="pug">
+div.gb-login-box login
+  login-box
 </template>
+
+<script>
+import LoginBox from '@/components/login/LoginBox';
+
+export default {
+  components: {
+    LoginBox
+  }
+};
+</script>
+
+<style lang="sass" scoped>
+</style>
