@@ -2,8 +2,7 @@ import { createStore } from 'vuex';
 
 const roomModule = {
   state: {},
-  mutations: {},
-  actions: {}
+  mutations: {}
 };
 
 export default createStore(roomModule);

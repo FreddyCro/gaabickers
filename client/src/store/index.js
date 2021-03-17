@@ -29,7 +29,6 @@ export default createStore({
       state.user = userStub;
     }
   },
-  actions: {},
   modules: {
     chat: chatModule,
     lobby: lobbyModule

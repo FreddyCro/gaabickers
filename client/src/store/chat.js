@@ -1,10 +1,17 @@
 // import moment from 'moment';
-import roomStub from '@/stubs/room';
+const defaultRooms = [
+  {
+    name: 'WomenTalk'
+  },
+  {
+    name: 'MenTalk'
+  }
+];
 
 export default {
   state: () => ({
     userList: [],
-    room: roomStub,
+    roomList: [...defaultRooms],
     messages: []
   }),
   mutations: {
@@ -17,10 +24,5 @@ export default {
         time: msg.time
       });
     }
-  },
-  actions: {
-    // initService({ commit }) {
-    //   commit('initService');
-    // }
   }
 };

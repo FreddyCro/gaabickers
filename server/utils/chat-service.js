@@ -1,39 +1,4 @@
-const handleUserConnection = socket => {
-  socket.emit('connection');
-};
-
-const handleUserDisconnection = socket => {
-  socket.on('disconnect', userName => {
-    const msg = {
-      name: userName,
-      text: `${userName} is disconnected.`,
-      time: new Date()
-    };
-    // socket.broadcast.emit('message', msg);
-  });
-};
-
-const handleUserJoinRoom = socket => {
-  socket.on('joinRoom', userName => {
-    const msg = {
-      name: userName,
-      text: `${userName} is joined.`,
-      time: new Date()
-    };
-    socket.broadcast.emit('message', msg);
-
-    // update users number of room
-  });
-};
-
-const handleUserLeaveRoom = socket => {};
-
-const handleUserSendMessage = socket => {
-  socket.on('chatMessage', msg => {
-    socket.broadcast.emit('message', msg);
-    socket.emit('message', msg);
-  });
-};
+const { formatUser, userJoin, getCurrentUser, userLeave } = require('./users');
 
 class chatService {
   constructor(io) {
@@ -42,33 +7,54 @@ class chatService {
     this.users = [];
   }
 
-  addRoom(name, id) {}
-  removeRoom() {}
-
-  userConnect(name) {}
-  userDisconnect() {}
-
-  userEnterRoom() {}
-  userLeaveRoom() {}
-
   start() {
     this.io.on('connection', socket => {
-      this.userConnect(socket.id);
+      console.log(`${socket.id} is connected`);
 
-      handleUserConnection(socket);
-      handleUserDisconnection(socket);
-      handleUserJoinRoom(socket);
-      handleUserLeaveRoom(socket);
-      handleUserSendMessage(socket);
+      socket.on('login', userName => {
+        socket.emit('login', formatUser(socket.id, userName));
+      });
 
-      // socket.on('disconnect', userName => {
-      //   const msg = {
-      //     name: userName,
-      //     text: `${userName} is disconnected.`,
-      //     time: new Date()
-      //   };
-      //   // socket.broadcast.emit('message', msg);
-      // });
+      // disconnection
+      socket.on('disconnect', userName => {
+        const msg = {
+          name: userName,
+          text: `${userName} is disconnected.`,
+          time: new Date()
+        };
+        socket.broadcast.emit('message', msg);
+        console.log(`${socket.id} is disconnected`);
+      });
+
+      socket.on('joinRoom', ({ userName, room }) => {
+        // click enter button
+        const user = userJoin(socket.id, userName, room);
+        socket.join(user.room);
+        socket.to(user.room).emit('message', {
+          name: userName,
+          text: `${userName} is joined.`
+        });
+      });
+
+      socket.on('leaveRoom', () => {
+        // click leave button
+        const user = userLeave(socket.id);
+
+        if (user) {
+          this.io.to(user.room).emit('message', {
+            name: user.userName,
+            text: 'leave'
+          });
+        }
+      });
+
+      socket.on('sendMessage', ({ name, text }) => {
+        // user submit message
+        const user = getCurrentUser(socket.id);
+
+        // broacast to target room
+        this.io.to(user.room).emit('message', { name, text });
+      });
     });
   }
 }

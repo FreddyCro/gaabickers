@@ -2,7 +2,7 @@
 div.gb-message-input
   form#chat-form
     input#msg(type="text" v-model="text")
-    button(@click="submit") submit
+    button(@click="submit($event)") submit
 </template>
 
 <script>
@@ -12,8 +12,9 @@ export default {
     text: ''
   }),
   methods: {
-    submit() {
-      this.$store.state.service.socket.emit('chatMessage', {
+    submit(e) {
+      e.preventDefault();
+      this.$store.state.service.socket.emit('sendMessage', {
         name: this.$store.state.user.name,
         text: this.text
       });
