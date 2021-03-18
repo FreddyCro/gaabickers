@@ -1,7 +1,7 @@
 <template lang="pug">
 div.room-list
   div(v-for="room in $store.state.chat.roomList" :key="room.name")
-    p {{ room.name }}
+    p {{ `${room.name}(${room.users.length})` }}
     button(@click.prevent="joinRoom(room.name)") Join
     button(@click.prevent="leaveRoom(room.name)") Leave
 </template>

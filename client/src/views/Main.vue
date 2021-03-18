@@ -11,8 +11,6 @@ div.home(v-if="isLogin")
   room-list
 
   hr
-  hr
-  hr
 
   //- room
   message-list(v-if="chat.messages.length > 0" :messages="chat.messages")
@@ -22,9 +20,9 @@ div.home(v-if="isLogin")
 <script>
 import { mapMutations } from 'vuex';
 
-import MessageInput from '@/components/chat/room/MessageInput';
-import MessageList from '@/components/chat/room/MessageList';
-import RoomList from '@/components/chat/lobby/RoomList';
+import MessageInput from '@/components/main/chat/MessageInput';
+import MessageList from '@/components/main/chat/MessageList';
+import RoomList from '@/components/main/room/RoomList';
 
 export default {
   name: 'Main',

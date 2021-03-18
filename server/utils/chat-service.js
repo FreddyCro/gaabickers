@@ -1,11 +1,11 @@
 const { formatUser, findUser } = require('./users');
 const { formatMsg } = require('./messages');
-const rooms = require('./rooms');
+const { defaultRooms, findRoom } = require('./rooms');
 
 class chatService {
   constructor(io) {
     this.io = io;
-    this.rooms = [...rooms];
+    this.rooms = [...defaultRooms];
     this.users = [];
   }
 
@@ -31,11 +31,18 @@ class chatService {
     }
   }
 
-  joinRoom(socket, room) {
+  joinRoom(socket, roomName) {
     const index = findUser(socket.id, this.users);
     if (index !== -1) {
       const user = this.users[index];
-      user.room = room;
+      user.room = roomName;
+
+      const room = this.rooms[findRoom(user.room, this.rooms)];
+      room.users.push({
+        id: user.clientId,
+        name: user.name
+      });
+
       socket.join(user.room);
       socket.to(user.room).emit(
         'message',
@@ -51,7 +58,13 @@ class chatService {
     const index = findUser(socket.id, this.users);
     if (index !== -1) {
       const user = this.users[index];
+
+      const room = this.rooms[findRoom(user.room, this.rooms)];
+      const userIndexInRoom = findUser(user.id, room.users);
+      room.users.splice(userIndexInRoom, 1)[0];
+
       socket.leave(user.room);
+
       this.io.to(user.room).emit(
         'message',
         formatMsg({
@@ -65,10 +78,10 @@ class chatService {
   sendMessage(socket, msg) {
     // user submit message
     const index = findUser(socket.id, this.users);
+
     if (index !== -1) {
-      const user = this.users[index];
       // broacast to target room
-      this.io.to(user.room).emit('message', formatMsg(msg));
+      this.io.to(this.users[index].room).emit('message', formatMsg(msg));
     }
   }
 

@@ -25,8 +25,6 @@ export default createStore({
       });
       state.service.socket.on('updateInfoToClient', ({ userCount, rooms }) => {
         state.totalUsers = userCount;
-
-        // in chatModule
         state.chat.roomList = rooms;
       });
       state.service.socket.on('getUserCount', count => {
