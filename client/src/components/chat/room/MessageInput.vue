@@ -2,23 +2,27 @@
 div.gb-message-input
   form#chat-form
     input#msg(type="text" v-model="text")
-    button(@click="submit($event)") submit
+    button(@click.prevent="sendMessage(msg)") submit
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'MessageInput',
   data: () => ({
     text: ''
   }),
-  methods: {
-    submit(e) {
-      e.preventDefault();
-      this.$store.state.service.socket.emit('sendMessage', {
+  computed: {
+    msg() {
+      return {
         name: this.$store.state.user.name,
         text: this.text
-      });
+      };
     }
+  },
+  methods: {
+    ...mapMutations(['sendMessage'])
   }
 };
 </script>

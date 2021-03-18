@@ -3,7 +3,7 @@ h2 There is {{ $store.state.totalUsers }} people on server.
 form#input-user-name
   label(for="name") input name
   input#name(type="text" v-model="inputUserName" minlength="1")
-  button(@click="loginSubmit($event, inputUserName)") login
+  button(@click.prevent="loginSubmit(inputUserName)") login
 </template>
 
 <script>
@@ -15,17 +15,12 @@ export default {
     inputUserName: ''
   }),
   methods: {
-    ...mapMutations(['initService', 'userLogin', 'updateTotalUsers']),
-    loginSubmit(e, inputUserName) {
-      e.preventDefault();
-
-      if (inputUserName.length < 1) return;
-
-      // login
-      this.$store.state.service.socket.emit('login', inputUserName);
+    ...mapMutations(['initService', 'userLoginSubmit', 'userLoginSuccess']),
+    loginSubmit(inputUserName) {
+      if (inputUserName.length >= 1) this.userLoginSubmit(inputUserName);
     },
     loginSuccess(user) {
-      this.userLogin({ name: user.userName, id: user.id });
+      this.userLoginSuccess(user);
       // TODO: disabled login button
       // TODO: loading animation
 
@@ -35,12 +30,9 @@ export default {
   },
   created() {
     this.initService();
-    this.$store.state.service.socket.on('login', user =>
+    this.$store.state.service.socket.on('loginSuccess', user =>
       this.loginSuccess(user)
     );
-    this.$store.state.service.socket.on('getUserCount', count => {
-      this.updateTotalUsers(count);
-    });
   }
 };
 </script>

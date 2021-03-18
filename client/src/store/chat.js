@@ -1,28 +1,22 @@
-// import moment from 'moment';
-const defaultRooms = [
-  {
-    name: 'WomenTalk'
-  },
-  {
-    name: 'MenTalk'
-  }
-];
-
-export default {
-  state: () => ({
-    userList: [],
-    roomList: [...defaultRooms],
+const chatModule = {
+  state: {
+    roomList: [],
     messages: []
-  }),
+  },
   mutations: {
-    userEnterRoom() {},
-    userLeaveRoom() {},
-    addMessage(state, msg) {
-      state.messages.push({
-        name: msg.name || 'anonymity',
-        text: msg.text,
-        time: msg.time
-      });
+    sendMessage(state, msg) {
+      state.service.socket.emit('sendMessage', msg);
+    },
+    starReceiveMessage(state) {
+      state.service.socket.on('message', msg => state.chat.messages.push(msg));
+    },
+    joinRoom(state, room) {
+      state.service.socket.emit('joinRoom', room);
+    },
+    leaveRoom(state) {
+      state.service.socket.emit('leaveRoom');
     }
   }
 };
+
+export default chatModule;

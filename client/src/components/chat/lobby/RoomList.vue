@@ -2,27 +2,17 @@
 div.room-list
   div(v-for="room in $store.state.chat.roomList" :key="room.name")
     p {{ room.name }}
-    button(@click="joinRoom($event, room.name)") Join
-    button(@click="leaveRoom($event, room.name)") Leave
+    button(@click.prevent="joinRoom(room.name)") Join
+    button(@click.prevent="leaveRoom(room.name)") Leave
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'RoomList',
   methods: {
-    joinRoom(e, room) {
-      e.preventDefault();
-      this.$store.state.service.socket.emit('joinRoom', {
-        userName: this.$store.state.user.name,
-        room: room
-      });
-    },
-    leaveRoom(e, room) {
-      this.$store.state.service.socket.emit('leaveRoom', {
-        userName: this.$store.state.user.name,
-        room: room
-      });
-    }
+    ...mapMutations(['joinRoom', 'leaveRoom'])
   }
 };
 </script>

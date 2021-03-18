@@ -2,7 +2,7 @@
 div.home(v-if="isLogin")
   router-link(to="/") Go to login
   h1(v-if="state.service.socket.isConnection") hi
-  h2 There is {{ $store.state.totalUsers }} people on server.
+  h2 There is {{ state.totalUsers }} people on server.
   div.user-info
     p {{ `name: ${state.user.name}` }}
     p {{ `id: ${state.user.id}` }}
@@ -45,13 +45,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['addMessage'])
+    ...mapMutations(['starReceiveMessage'])
   },
   created() {
     // check is user login
     if (!this.isLogin) return window.location.assign(window.location.origin);
     // receive all messages
-    else this.state.service.socket.on('message', msg => this.addMessage(msg));
+    else this.starReceiveMessage();
   }
 };
 </script>
