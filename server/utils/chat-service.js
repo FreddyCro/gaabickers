@@ -1,4 +1,5 @@
 const { formatUser, userJoin, getCurrentUser, userLeave } = require('./users');
+const { formatMsg } = require('./messages');
 
 class chatService {
   constructor(io) {
@@ -10,19 +11,18 @@ class chatService {
   start() {
     this.io.on('connection', socket => {
       console.log(`${socket.id} is connected`);
+      socket.emit('connection');
 
+      // recieve front end login
       socket.on('login', userName => {
-        socket.emit('login', formatUser(socket.id, userName));
+        const user = formatUser(socket.id, userName);
+        this.users.push(user);
+        socket.emit('login', user);
       });
 
       // disconnection
-      socket.on('disconnect', userName => {
-        const msg = {
-          name: userName,
-          text: `${userName} is disconnected.`,
-          time: new Date()
-        };
-        socket.broadcast.emit('message', msg);
+      socket.on('disconnect', () => {
+        // TODO: slice user from users
         console.log(`${socket.id} is disconnected`);
       });
 
@@ -30,10 +30,14 @@ class chatService {
         // click enter button
         const user = userJoin(socket.id, userName, room);
         socket.join(user.room);
-        socket.to(user.room).emit('message', {
-          name: userName,
-          text: `${userName} is joined.`
-        });
+
+        socket.to(user.room).emit(
+          'message',
+          formatMsg({
+            name: user.userName,
+            text: `${user.userName} is joined.`
+          })
+        );
       });
 
       socket.on('leaveRoom', () => {
@@ -41,10 +45,14 @@ class chatService {
         const user = userLeave(socket.id);
 
         if (user) {
-          this.io.to(user.room).emit('message', {
-            name: user.userName,
-            text: 'leave'
-          });
+          socket.leave(user.room);
+          this.io.to(user.room).emit(
+            'message',
+            formatMsg({
+              name: user.userName,
+              text: `${user.userName} is left.`
+            })
+          );
         }
       });
 
@@ -52,9 +60,22 @@ class chatService {
         // user submit message
         const user = getCurrentUser(socket.id);
 
-        // broacast to target room
-        this.io.to(user.room).emit('message', { name, text });
+        if (user) {
+          // broacast to target room
+          this.io.to(user.room).emit(
+            'message',
+            formatMsg({
+              name,
+              text
+            })
+          );
+        }
       });
+
+      // poll broadcast
+      setInterval(() => {
+        socket.broadcast.emit('getUserCount', this.users.length);
+      }, 3000);
     });
   }
 }

@@ -1,6 +1,8 @@
 <template lang="pug">
+h2 There is {{ $store.state.totalUsers }} people on server.
 form#input-user-name
-  input#name(type="text" v-model="inputUserName")
+  label(for="name") input name
+  input#name(type="text" v-model="inputUserName" minlength="1")
   button(@click="loginSubmit($event, inputUserName)") login
 </template>
 
@@ -13,24 +15,32 @@ export default {
     inputUserName: ''
   }),
   methods: {
-    ...mapMutations(['userLogin']),
+    ...mapMutations(['initService', 'userLogin', 'updateTotalUsers']),
     loginSubmit(e, inputUserName) {
       e.preventDefault();
+
+      if (inputUserName.length < 1) return;
+
       // login
-      this.userLogin(inputUserName);
+      this.$store.state.service.socket.emit('login', inputUserName);
+    },
+    loginSuccess(user) {
+      this.userLogin({ name: user.userName, id: user.id });
+      // TODO: disabled login button
+      // TODO: loading animation
 
       // route to chat page
       this.$router.push('chat');
-    },
-    loginSuccess(user) {
-      console.log(user);
     }
   },
   created() {
-    // login 階段 socket 還沒初始話...
-    // this.$store.state.service.socket.on('login', user =>
-    //   this.loginSuccess(user)
-    // );
+    this.initService();
+    this.$store.state.service.socket.on('login', user =>
+      this.loginSuccess(user)
+    );
+    this.$store.state.service.socket.on('getUserCount', count => {
+      this.updateTotalUsers(count);
+    });
   }
 };
 </script>

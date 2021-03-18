@@ -1,6 +1,6 @@
 <template lang="pug">
 div.gb-message
-  p {{ `${msg.name}: ${msg.text} at ${msg.time || (new Date())}` }}
+  p {{ `${msg.name || ''}: ${msg.text} at ${msg.time || ''}` }}
 </template>
 
 <script>

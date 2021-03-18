@@ -3,12 +3,12 @@ import { io } from 'socket.io-client';
 
 import chatModule from './chat';
 import lobbyModule from './lobby';
-import userStub from '@/stubs/user';
 import { formatUser } from '@/services/user';
 
 export default createStore({
   state: () => ({
-    user: userStub,
+    user: null,
+    totalUsers: 0,
     service: {
       isConnection: false,
       socket: null
@@ -18,15 +18,18 @@ export default createStore({
     initService(state) {
       state.service.socket = io();
       state.service.socket.on('connection', () => {
-        state.service.socket.isConnection = true;
+        state.service.isConnection = true;
       });
     },
     userLogin(state, inputName) {
       state.user = formatUser(inputName);
     },
     userLogout(state) {
-      state.service.socket.isConnection = false;
-      state.user = userStub;
+      state.service.isConnection = false;
+      state.user = null;
+    },
+    updateTotalUsers(state, count) {
+      state.totalUsers = count;
     }
   },
   modules: {

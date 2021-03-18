@@ -1,17 +1,20 @@
 <template lang="pug">
-div.home
+div.home(v-if="isLogin")
   router-link(to="/") Go to login
   h1(v-if="state.service.socket.isConnection") hi
+  h2 There is {{ $store.state.totalUsers }} people on server.
   div.user-info
     p {{ `name: ${state.user.name}` }}
     p {{ `id: ${state.user.id}` }}
 
+  //- lobby
   room-list
 
   hr
   hr
   hr
 
+  //- room
   message-list(v-if="chat.messages.length > 0" :messages="chat.messages")
   message-input
 </template>
@@ -31,6 +34,9 @@ export default {
     RoomList
   },
   computed: {
+    isLogin() {
+      return this.state.service.isConnection && this.state?.user?.isLogin;
+    },
     state() {
       return this.$store.state;
     },
@@ -39,13 +45,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['initService', 'addMessage'])
+    ...mapMutations(['addMessage'])
   },
   created() {
-    this.initService();
-
+    // check is user login
+    if (!this.isLogin) return window.location.assign(window.location.origin);
     // receive all messages
-    this.state.service.socket.on('message', msg => this.addMessage(msg));
+    else this.state.service.socket.on('message', msg => this.addMessage(msg));
   }
 };
 </script>

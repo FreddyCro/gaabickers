@@ -1,6 +1,7 @@
 const user = {
   name: null,
-  id: null
+  id: null,
+  isLogin: false
 };
 
 export default user;
