@@ -25,5 +25,12 @@ module.exports = {
       .loader('pug-html-loader')
       .end();
     config.resolve.alias.set('@', resolve('client/src'));
+  },
+  css: {
+    loaderOptions: {
+      scss: {
+        additionalData: `@import "~@/assets/style/_base/mixins/all.scss"; @import "~@/assets/style/_base/variables/all.scss";`
+      }
+    }
   }
 };

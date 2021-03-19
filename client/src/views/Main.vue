@@ -20,9 +20,9 @@ div.home(v-if="isLogin")
 <script>
 import { mapMutations } from 'vuex';
 
-import MessageInput from '@/components/main/chat/MessageInput';
-import MessageList from '@/components/main/chat/MessageList';
-import RoomList from '@/components/main/room/RoomList';
+import MessageInput from '@/components/main/chat/message-input';
+import MessageList from '@/components/main/chat/message-list';
+import RoomList from '@/components/main/room/room-list';
 
 export default {
   name: 'Main',

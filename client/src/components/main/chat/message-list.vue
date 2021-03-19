@@ -4,7 +4,7 @@ div.gb-message-list
 </template>
 
 <script>
-import Message from '@/components/main/chat/Message';
+import Message from '@/components/main/chat/message';
 
 export default {
   name: 'MessageList',
