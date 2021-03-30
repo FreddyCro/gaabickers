@@ -1,19 +1,24 @@
 <template lang="pug">
-the-header
-div.gb-login-box login
-  login-box
+div.gb-login
+  gb-login-box
 </template>
 
 <script>
-import LoginBox from '@/components/login/login-box';
-import TheHeader from '@/components/common/header/the-header';
+import GbLoginBox from '@/components/login/gb-login-box';
 
 export default {
   components: {
-    LoginBox,
-    TheHeader
+    GbLoginBox
   }
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+.gb-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  @include normal-padding;
+}
+</style>

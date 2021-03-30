@@ -10,7 +10,7 @@ div.room-list
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'RoomList',
+  name: 'GbRoomList',
   methods: {
     ...mapMutations(['joinRoom', 'leaveRoom'])
   }

@@ -1,35 +1,40 @@
 <template lang="pug">
-div.home(v-if="isLogin")
-  router-link(to="/") Go to login
-  h1(v-if="state.service.socket.isConnection") hi
-  h2 There is {{ state.totalUsers }} people on server.
-  div.user-info
-    p {{ `name: ${state.user.name}` }}
-    p {{ `id: ${state.user.id}` }}
+div.gb-main(v-if="isLogin")
+
+  div.nav-container
+    router-link(to="/") Go to login
+
+  div.info-container
+    h1(v-if="state.service.socket.isConnection") hi
+    h2 There is {{ state.totalUsers }} people on server.
+    div.user-info
+      p {{ `name: ${state.user.name}` }}
+      p {{ `id: ${state.user.id}` }}
 
   //- lobby
-  room-list
+  div.room-list-container
+    gb-room-list
 
   hr
 
   //- room
-  message-list(v-if="chat.messages.length > 0" :messages="chat.messages")
-  message-input
+  gb-message-list(v-if="chat.messages.length > 0" :messages="chat.messages")
+  gb-message-input
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
 
-import MessageInput from '@/components/main/chat/message-input';
-import MessageList from '@/components/main/chat/message-list';
-import RoomList from '@/components/main/room/room-list';
+import GbMessageInput from '@/components/main/chat/gb-message-input';
+import GbMessageList from '@/components/main/chat/gb-message-list';
+import GbRoomList from '@/components/main/room/gb-room-list';
 
 export default {
   name: 'Main',
   components: {
-    MessageInput,
-    MessageList,
-    RoomList
+    GbMessageInput,
+    GbMessageList,
+    GbRoomList
   },
   computed: {
     isLogin() {
@@ -53,3 +58,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.gb-main {
+  position: relative;
+  @include normal-padding;
+}
+</style>

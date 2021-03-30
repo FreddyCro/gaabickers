@@ -1,0 +1,8 @@
+@import './_responsive';
+
+@mixin normal-padding {
+  padding: $spacing-lv3;
+  @include lg {
+    padding: $spacing-lv5;
+  }
+}

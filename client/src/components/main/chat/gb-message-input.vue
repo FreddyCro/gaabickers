@@ -9,7 +9,7 @@ div.gb-message-input
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'MessageInput',
+  name: 'GbMessageInput',
   data: () => ({
     text: ''
   }),

@@ -1,15 +1,15 @@
 <template lang="pug">
 div.gb-message-list
-  message(v-for="msg in messages" :key="msg.time" :msg="msg")
+  gb-message(v-for="msg in messages" :key="msg.time" :msg="msg")
 </template>
 
 <script>
-import Message from '@/components/main/chat/message';
+import GbMessage from '@/components/main/chat/gb-message';
 
 export default {
   name: 'MessageList',
   components: {
-    Message
+    GbMessage
   },
   props: {
     messages: {

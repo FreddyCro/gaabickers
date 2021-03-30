@@ -5,7 +5,7 @@ div.gb-message
 
 <script>
 export default {
-  name: 'Message',
+  name: 'GbMessage',
   props: {
     msg: {
       type: Object

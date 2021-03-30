@@ -1,16 +1,17 @@
 <template lang="pug">
-h2 There is {{ $store.state.totalUsers }} people on server.
-form#input-user-name
-  label(for="name") input name
-  input#name(type="text" v-model="inputUserName" minlength="1")
-  button(@click.prevent="loginSubmit(inputUserName)") login
+div.gb-login-box
+  h2 There is {{ $store.state.totalUsers }} people on server.
+  form#input-user-name
+    label(for="name") input name
+    input#name(type="text" v-model="inputUserName" minlength="1")
+    button(@click.prevent="loginSubmit(inputUserName)") login
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LoginBox',
+  name: 'GbLoginBox',
   data: () => ({
     inputUserName: ''
   }),
@@ -37,4 +38,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.gb-login-box {
+  border: dotted 1px $black;
+}
+</style>
