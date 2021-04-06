@@ -8,11 +8,16 @@ div.room-list
 
 <script>
 import { mapMutations } from 'vuex';
+import { socketOnJoinRoomSuccess } from '@/services/user';
 
 export default {
   name: 'GbRoomList',
   methods: {
     ...mapMutations(['joinRoom', 'leaveRoom'])
+  },
+  created() {
+    const servcieConfig = [this.$store.state.service.socket, this.$store.state];
+    socketOnJoinRoomSuccess(...servcieConfig);
   }
 };
 </script>

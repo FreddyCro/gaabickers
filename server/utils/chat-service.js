@@ -44,6 +44,7 @@ class chatService {
       });
 
       socket.join(user.room);
+      socket.emit('joinRoomSuccess', user.room);
       socket.to(user.room).emit(
         'message',
         formatMsg({

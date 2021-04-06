@@ -9,6 +9,8 @@ div.gb-login-box
 
 <script>
 import { mapMutations } from 'vuex';
+import { socketOnConnction, socketOnUpdateInfo } from '@/services/socket';
+import { socketOnGetUserCount, socketOnLoginSuccess } from '@/services/user';
 
 export default {
   name: 'GbLoginBox',
@@ -16,12 +18,13 @@ export default {
     inputUserName: ''
   }),
   methods: {
-    ...mapMutations(['initService', 'userLoginSubmit', 'userLoginSuccess']),
+    ...mapMutations(['initService']),
     loginSubmit(inputUserName) {
-      if (inputUserName.length >= 1) this.userLoginSubmit(inputUserName);
+      if (inputUserName.length < 1) return;
+
+      this.$store.state.service.socket.emit('login', inputUserName);
     },
-    loginSuccess(user) {
-      this.userLoginSuccess(user);
+    loginSuccess() {
       // TODO: disabled login button
       // TODO: loading animation
 
@@ -31,9 +34,14 @@ export default {
   },
   created() {
     this.initService();
-    this.$store.state.service.socket.on('loginSuccess', user =>
-      this.loginSuccess(user)
-    );
+
+    const servcieConfig = [this.$store.state.service.socket, this.$store.state];
+
+    socketOnConnction(...servcieConfig);
+    socketOnUpdateInfo(...servcieConfig);
+    socketOnGetUserCount(...servcieConfig);
+    socketOnGetUserCount(...servcieConfig);
+    socketOnLoginSuccess(...servcieConfig, this.loginSuccess);
   }
 };
 </script>

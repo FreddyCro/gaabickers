@@ -23,7 +23,7 @@ div.gb-main(v-if="isLogin")
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { socketOnReceiveMsg } from '@/services/message';
 
 import GbMessageInput from '@/components/main/chat/gb-message-input';
 import GbMessageList from '@/components/main/chat/gb-message-list';
@@ -47,14 +47,17 @@ export default {
       return this.$store.state.chat;
     }
   },
-  methods: {
-    ...mapMutations(['starReceiveMessage'])
-  },
   created() {
     // check is user login
     if (!this.isLogin) return window.location.assign(window.location.origin);
     // receive all messages
-    else this.starReceiveMessage();
+    else {
+      const servcieConfig = [
+        this.$store.state.service.socket,
+        this.$store.state
+      ];
+      socketOnReceiveMsg(...servcieConfig);
+    }
   }
 };
 </script>
